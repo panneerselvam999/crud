@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/users");
 const multer = require("multer");
+const fs = require("fs");
 
 //image upload
 var storage = multer.diskStorage({
@@ -67,6 +68,24 @@ router.get("/", (req, res) => {
 //Add user
 router.get("/add", (req, res) => {
   res.render("add_user", { title: "Add User" });
+});
+
+router.get("/edit/:id", (req, res) => {
+  let id = req.params.id;
+  User.findById(id, (err, user) => {
+    if (err) {
+      res.redirect("/");
+    } else {
+      if (user == null) {
+        res.redirect("/");
+      } else {
+        res.render("edit_users", {
+          title: "Edit User",
+          user: user,
+        });
+      }
+    }
+  });
 });
 
 module.exports = router;
