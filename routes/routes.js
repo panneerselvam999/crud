@@ -88,4 +88,40 @@ router.get("/edit/:id", (req, res) => {
   });
 });
 
+//Update user route
+router.post("/update/:id", upload, (req, res) => {
+  let id = req.params.id;
+  let new_image = "";
+
+  if (req.file) {
+    new_image = req.file.filename;
+    try {
+      fs.unlinkSync("./uploads" + req.body.old_image);
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
+    new_image = req.body.old_image;
+  }
+
+  User.findByIdAndUpdate(id,{
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.phone,
+      image: new_image,
+    },
+    (err, result) => {
+      if (err) {
+        res.json({ message: err.message, type: "danger" });
+      } else {
+        req.session.message = {
+          type: "success",
+          message: "User update successfully!",
+        };
+        res.redirect("/");
+      }
+    }
+  );
+});
+
 module.exports = router;
