@@ -37,6 +37,9 @@ app.use((req, res, next) => {
   next();
 });
 
+// set uploads folder static (It's like a milddlewares)
+app.use(express.static("uploads"));
+
 // set template engine
 app.set("view engine", "ejs");
 
