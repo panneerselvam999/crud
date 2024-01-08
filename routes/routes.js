@@ -104,7 +104,9 @@ router.post("/update/:id", upload, (req, res) => {
     new_image = req.body.old_image;
   }
 
-  User.findByIdAndUpdate(id,{
+  User.findByIdAndUpdate(
+    id,
+    {
       name: req.body.name,
       email: req.body.email,
       phone: req.body.phone,
@@ -122,6 +124,76 @@ router.post("/update/:id", upload, (req, res) => {
       }
     }
   );
+});
+
+//Delete user route
+// router.get('/delete/:id', (req, res) =>{
+//   let id = req.params.id;
+//   User.findByIdAndRemove(id, (err. result) =>{
+//     if(result.image != ''){
+//       try{
+//         fs.unlinkSync('./uploads/' + result.image)
+//       }catch(err){
+//         console.log(err)
+//       }
+//     }
+//     if(err){
+//       res.json({ message: err.message })
+//     }else{
+//       req.session.message = {
+//         type: 'info',
+//         message: 'User Deleted successfully!'
+//       }
+//       res.redirect('/')
+//     }
+
+//   })
+// })
+// router.get('/delete/:id', (req, res) => {
+//   const id = req.params.id;
+//   User.findByIdAndRemove(id, (err, result) => {
+//     if (err) {
+//       res.status(500).json({ message: err.message });
+//       return;
+//     }
+
+//     if (result.image) {
+//       fs.unlink('./uploads/' + result.image, (err) => {
+//         if (err) {
+//           res.status(500).json({ message: 'Failed to delete image' });
+//           return;
+//         }
+//       });
+//     }
+
+//     req.session.message = {
+//       type: 'info',
+//       message: 'User Deleted successfully!'
+//     };
+//     res.redirect('/');
+//   });
+// });
+
+router.get("/delete/:id", (req, res) => {
+  let id = req.params.id;
+  User.findByIdAndRemove(id, (err, result) => {
+    if (result.image != "") {
+      try {
+        fs.unlinkSync("./uploads/" + result.image);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    if (err) {
+      res.json({ message: err.message });
+    } else {
+      req.session.message = {
+        type: "info",
+        message: "User Deleted successfully!",
+      };
+      res.redirect("/");
+    }
+  });
 });
 
 module.exports = router;
