@@ -9,7 +9,7 @@ var storage = multer.diskStorage({
     cb(null, "./uploads");
   },
   filename: function (req, file, cb) {
-    cb(null, file.filename + "_" + Date.now() + "_" + file.originalname);
+    cb(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
   },
 });
 
@@ -30,11 +30,25 @@ router.post("/add", upload, (req, res) => {
     if (err) {
       res.json({ message: err.message, type: "danger" });
     } else {
-      req.session.message = { 
+      req.session.message = {
         type: "success",
         message: "User added successfully!",
       };
       res.redirect("/");
+    }
+  });
+});
+
+//get all users route
+router.get("/", (req, res) => {
+  User.find().exec((err, users) => {
+    if (err) {
+      res.json({ message: err.message });
+    } else {
+      res.render("index", {
+        title: "Home Page",
+        users: users,
+      });
     }
   });
 });
