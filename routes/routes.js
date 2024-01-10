@@ -96,7 +96,8 @@ router.post("/update/:id", upload, (req, res) => {
   if (req.file) {
     new_image = req.file.filename;
     try {
-      fs.unlinkSync("./uploads" + req.body.old_image);
+      // fs.unlinkSync("./uploads" + req.body.old_image);
+      fs.unlinkSync("./uploads/" + req.body.old_image);
     } catch (err) {
       console.log(err);
     }
